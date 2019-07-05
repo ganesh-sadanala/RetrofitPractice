@@ -14,7 +14,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    TextView textView;
+    private TextView textView;
+    private JsonPlaceholderApi jsonPlaceholderApi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +26,14 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl("http://jsonplaceholder.typicode.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        JsonPlaceholderApi jsonPlaceholderApi=retrofit.create(JsonPlaceholderApi.class);
-        Call<List<Post>> call=jsonPlaceholderApi.getPosts();
+        jsonPlaceholderApi=retrofit.create(JsonPlaceholderApi.class);
+        //getPosts(); //for getting posts
+        getComments();
+    }
+
+    public void getPosts()
+    {
+        Call<List<Post>> call=jsonPlaceholderApi.getPosts(4);
         /*There is another methode call execute() because this method
         will run synchronously with main thread causing to freeze it.
         There is an another method called ennqueue by retrofit
@@ -49,15 +56,19 @@ public class MainActivity extends AppCompatActivity {
                 for(Post post:posts)
                 {
                     content+=post.getUserId()+" "+post.getUserId()+" "+post.getText()+" "+post.getText();
-                            content+="\n\n";
-                            textView.append(content);
+                    content+="\n\n";
+                    textView.append(content);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-               textView.setText(t.getMessage());
+                textView.setText(t.getMessage());
             }
         });
+    }
+    public void getComments()
+    {
+       //Implement the code similar to getPosts
     }
 }
